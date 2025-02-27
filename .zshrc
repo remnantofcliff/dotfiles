@@ -7,7 +7,7 @@ unsetopt beep
 bindkey -v
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
-zstyle :compinstall filename '/home/vjn/.zshrc'
+zstyle :compinstall filename '${HOME}/.zshrc'
 
 autoload -Uz compinit
 compinit
@@ -15,7 +15,7 @@ compinit
 
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-XDG_DATA_DIRS="/home/vjn/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:${XDG_DATA_DIRS}"
+XDG_DATA_DIRS="${HOME}/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:${XDG_DATA_DIRS}"
 
 autoload -Uz promptinit
 promptinit
@@ -28,6 +28,7 @@ export EDITOR=nvim
 export ELECTRON_OZONE_PLATFORM_HINT=wayland
 export GTK_THEME=Adwaita:dark
 export LIBRARY_PATH="${HOME}/Programs/llvm/lib/:$LIBRARY_PATH"
+export PATH="${HOME}/Programs/cmake/bin:${PATH}"
 export PATH="${HOME}/Programs/glsl_analyzer/bin/:${PATH}"
 export PATH="${HOME}/Programs/llvm/bin/:${PATH}"
 export PATH="${HOME}/Programs/lua-language-server/bin/:${PATH}"
