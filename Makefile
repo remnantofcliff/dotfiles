@@ -3,10 +3,10 @@
 all: alacritty neovim sway zsh
 
 alacritty: .config/alacritty/
-	cp -r ${<} ~/${<}
+	cp -rf ${<} ~/${<}
 neovim: .config/nvim/
-	cp -r ${<} ~/${<}
+	cp -rf ${<} ~/${<}
 sway: .config/sway/
-	cp -r ${<} ~/${<}
+	cp -rf ${<} ~/${<}
 zsh: .zshrc
-	cp -r ${<} ~/${<}
+	cp -rf ${<} ~/${<}
