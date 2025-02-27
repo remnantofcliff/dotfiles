@@ -1,20 +1,39 @@
-battery=$(cat /sys/class/power_supply/BAT0/status)
+string=""
 
-if [ "${battery}" = "Discharging" ];
-then
-    battery="[$(echo "${battery}" | tr '[:lower:]' '[:upper:]')]"
-else
-    battery=""
+if [ -x "$(command -v wpctl)" ]; then
+    volume="$(wpctl get-volume @DEFAULT_AUDIO_SINK@)"
+    string+=" :: ${volume}"
 fi
 
-battery="$(cat /sys/class/power_supply/BAT0/capacity)% ${battery}"
-date=$(date '+%Y-%m-%d %H:%M')
-volume="$(wpctl get-volume @DEFAULT_AUDIO_SINK@)"
-microphone="$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@)"
+if [ -x "$(command -v wpctl)" ]; then
+    microphone="$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@)"
+    case $microphone in
+        *'MUTED'*) microphone='󰍭' ;;
+                *) microphone='' ;;
+    esac
+    string+=" :: ${microphone}"
+fi
 
-case $microphone in
-    *'MUTED'*) microphone='󰍭' ;;
-            *) microphone='' ;;
-esac
+BATTERYSTATUS=/sys/class/power_supply/BAT0/status
+if [ -f "${BATTERYSTATUS}" ]; then
+    batterystatus=$(cat ${BATTERYSTATUS})
+    if [ "${batterystatus}" = "Discharging" ]; then
+        batterystatus='󰂃'
+    else
+        batterystatus='󰂄'
+    fi
+    string+=" :: ${batterystatus}"
+fi
 
-echo "${volume} :: $microphone :: Battery: ${battery} :: ${date}"
+BATTERYCAPACITY=/sys/class/power_supply/BAT0/status
+if [ -f "${BATTERYCAPACITY}" ]; then
+    batterycapacity="$(cat ${BATTERYCAPACITY})%"
+    string+=" :: ${batterycapacity}"
+fi
+
+if [ -x "$(command -v date)" ]; then
+    date=$(date '+%Y-%m-%d %H:%M')
+    string+=" :: ${date}"
+fi
+
+echo ${string}
