@@ -135,7 +135,7 @@ bindsym $mod+r mode "resize"
 bar {
     position bottom
 
-    font "Hack Nerd Font 10"
+    font "CaskaydiaMono Nerd Font 13"
 
     mode hide
 
