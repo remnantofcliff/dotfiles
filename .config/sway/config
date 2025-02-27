@@ -45,8 +45,15 @@ workspace 3 output HDMI-A-1
 
 input * {
     xkb_layout fi
+}
+
+input 1267:12668:ELAN06FA:00_04F3:317C_Touchpad {
     tap enabled
     natural_scroll enabled
+}
+
+input 1133:49295:Logitech_G403_HERO_Gaming_Mouse {
+
 }
 
 output * {
