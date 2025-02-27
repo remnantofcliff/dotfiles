@@ -1,4 +1,6 @@
-.PHONY := alacritty neovim sway
+.PHONY := all: alacritty neovim sway
+
+all: alacritty neovim sway
 
 alacritty: .config/alacritty/
 	cp -r ${<} ~/${<}
