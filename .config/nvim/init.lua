@@ -194,7 +194,7 @@ require('lazy').setup({
     lazy = false,
     opts = {
       log_level = "error",
-      auto_session_suppress_dirs = { "~/Projects", "~/Downloads", "/" },
+      suppressed_dirs = { "~/Projects", "~/Downloads", "/" }
     },
   },
   {
@@ -243,6 +243,7 @@ vim.o.splitbelow = true -- Put new windows below current
 vim.o.splitright = true -- Put new windows right of current
 vim.o.splitkeep = "topline"
 vim.o.expandtab = true
+vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 vim.o.shiftwidth = 2
 vim.o.tabstop = 2
 vim.o.virtualedit = "block"          -- Allow cursor to move where there is no text in visual block mode
@@ -298,41 +299,46 @@ require('which-key').add({
 })
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-require('lspconfig').clangd.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-})
-require('lspconfig').glsl_analyzer.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-})
-require('lspconfig').lua_ls.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-})
-require('lspconfig').rust_analyzer.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  settings = {
-    ['rust-analyzer'] = {
-      cargo = {
-        buildScripts = {
-          enable = true,
+vim.api.nvim_create_user_command(
+  'StartLSP',
+  function(opts)
+    require('lspconfig').lua_ls.setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+    })
+    require('lspconfig').clangd.setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+    })
+    require('lspconfig').glsl_analyzer.setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+    })
+    require('lspconfig').rust_analyzer.setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = {
+        ['rust-analyzer'] = {
+          cargo = {
+            buildScripts = {
+              enable = true,
+            },
+          },
+          check = {
+            command = "clippy",
+          },
+          procMacro = {
+            enable = true,
+          },
         },
       },
-      check = {
-        command = "clippy",
-      },
-      procMacro = {
-        enable = true,
-      },
-    },
-  },
-})
-require('lspconfig').jedi_language_server.setup({})
-require('lspconfig').wgsl_analyzer.setup({})
-
+    })
+    require('lspconfig').jedi_language_server.setup({})
+    require('lspconfig').wgsl_analyzer.setup({})
+    vim.cmd('LspStart')
+  end,
+  {}
+);
 -- WGSL FILE DETECTION
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
   pattern = "*.wgsl",
@@ -346,7 +352,7 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.on_yank()
   end,
   group = highlight_group,
   pattern = '*',
