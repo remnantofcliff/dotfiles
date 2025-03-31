@@ -15,6 +15,6 @@ sway: .config/sway/
 	mv ~/${<} ~/.config/sway.old/
 	cp -r ${<} ~/${<}
 zsh: .zshrc
-	rm -r ~/.zshrc.old/
+	rm -r ~/.zshrc.old
 	mv ~/${<} ~/.zshrc.old
 	cp -r ${<} ~/${<}
