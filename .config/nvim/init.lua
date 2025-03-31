@@ -21,20 +21,24 @@ require('lazy').setup({
     dependencies = {
       'j-hui/fidget.nvim',
     },
+    version = '1.*'
   },
   {
     "j-hui/fidget.nvim",
     opts = {},
+    version = '1.*'
   },
   {
     "folke/lazydev.nvim",
     ft = "lua",
     opts = {},
+    version = '1.*'
   },
   {
     'folke/which-key.nvim',
     event = "VeryLazy",
     opts = {},
+    version = '3.*'
   },
   {
     'olimorris/onedarkpro.nvim',
@@ -56,6 +60,7 @@ require('lazy').setup({
         Visual = { bg = "#4F4F4F" },
       },
     },
+    version = '2.*'
   },
   {
     'nvim-lualine/lualine.nvim',
@@ -83,6 +88,7 @@ require('lazy').setup({
         show_start = false,
       },
     },
+    version = '3.*'
   },
   {
     'nvim-telescope/telescope.nvim',
@@ -132,13 +138,7 @@ require('lazy').setup({
       highlight = { enable = true },
       indent = { enable = true },
       incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = '<C-space>',
-          node_incremental = '<C-space>',
-          scope_incremental = '<C-s>',
-          node_decremental = '<M-space>',
-        },
+        enable = false,
       },
       textobjects = {
         select = {
@@ -196,23 +196,12 @@ require('lazy').setup({
       log_level = "error",
       suppressed_dirs = { "~/Projects", "~/Downloads", "/" }
     },
+    version = '2.*'
   },
   {
     'nmac427/guess-indent.nvim',
     event = "VeryLazy",
     opts = {},
-  },
-  {
-    "kylechui/nvim-surround",
-    version = "*",
-    event = "VeryLazy",
-    config = function()
-      require("nvim-surround").setup({
-        keymaps = {
-          visual = '<Leader>s',
-        },
-      })
-    end
   },
 }, {
   defaults = {
@@ -234,7 +223,6 @@ vim.wo.signcolumn = 'yes'
 vim.o.updatetime = 500
 vim.o.timeoutlen = 50
 vim.o.completeopt = 'menuone,popup,noinsert,noselect,fuzzy'
-vim.o.termguicolors = true
 vim.o.confirm = true
 vim.o.inccommand = "nosplit" -- preview incremental substitute
 vim.o.list = true
@@ -243,11 +231,12 @@ vim.o.splitbelow = true -- Put new windows below current
 vim.o.splitright = true -- Put new windows right of current
 vim.o.splitkeep = "topline"
 vim.o.expandtab = true
-vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 vim.o.shiftwidth = 2
 vim.o.tabstop = 2
 vim.o.virtualedit = "block"          -- Allow cursor to move where there is no text in visual block mode
 vim.o.wildmode = "longest:full,full" -- Command-line completion mode
+vim.o.winborder = 'single'
 vim.o.wrap = false                   -- Disable line wrap
 vim.cmd("let g:c_syntax_for_h = 1")
 
@@ -255,12 +244,11 @@ vim.cmd("let g:c_syntax_for_h = 1")
 
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-vim.keymap.set('n', '<Leader>de', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
+vim.keymap.set('n', '<leader>fb', 'gg=G``', { desc = '[f]ormat [b]uffer' })
 vim.keymap.set('n', '<leader>sb', function()
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes'))
+ require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes'))
 end, { desc = '[s]earch current [b]uffer' })
 vim.keymap.set('n', '<leader>sG', require('telescope.builtin').git_files, { desc = '[s]earch [G]it files' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[s]earch [f]iles' })
@@ -269,76 +257,14 @@ vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { de
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[s]earch by [g]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[s]earch [d]iagnostics' })
 
--- LSP SETUP
-
-local on_attach = function(_, bufnr)
-  vim.keymap.set('n', '<leader>cr', vim.lsp.buf.rename, { buffer = bufnr, desc = '[c]ode [r]ename' })
-  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { buffer = bufnr, desc = '[c]ode [a]ction' })
-  vim.keymap.set('n', '<leader>cd', require('telescope.builtin').lsp_definitions,
-    { buffer = bufnr, desc = '[c]ode [d]efinition' })
-  vim.keymap.set('n', '<leader>cR', require('telescope.builtin').lsp_references,
-    { buffer = bufnr, desc = '[c]ode [R]eferences' })
-  vim.keymap.set('n', '<leader>ci', require('telescope.builtin').lsp_implementations,
-    { buffer = bufnr, desc = '[c]ode [i]mplementation' })
-  vim.keymap.set('n', '<leader>cs', require('telescope.builtin').lsp_document_symbols,
-    { buffer = bufnr, desc = '[c]ode [s]ymbols' })
-  vim.keymap.set('n', '<leader>cws', require('telescope.builtin').lsp_dynamic_workspace_symbols,
-    { buffer = bufnr, desc = '[c]ode [w]orkspace [s]ymbols' })
-  vim.keymap.set('n', '<leader>cf', vim.lsp.buf.format, { buffer = bufnr, desc = '[c]ode [f]ormat' })
-
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = bufnr, desc = 'Hover Documentation' })
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { buffer = bufnr, desc = 'Signature Documentation' })
-  vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, { buffer = bufnr, desc = 'Signature Documentation' })
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = bufnr, desc = '[g]oto [D]eclaration' })
-end
-
 require('which-key').add({
-  { '<leader>c', group = '[c]ode' },
+  { '<leader>f', group = '[f]ormat' },
   { '<leader>s', group = '[s]earch' },
-  { '<leader>d', group = '[d]iagnostic' },
+  { '<leader>n', group = '[n]ext' },
+  { '<leader>p', group = '[p]revious' },
+  { '<leader>S', group = '[S]wap' },
 })
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-vim.api.nvim_create_user_command(
-  'StartLSP',
-  function(opts)
-    require('lspconfig').lua_ls.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
-    require('lspconfig').clangd.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
-    require('lspconfig').glsl_analyzer.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
-    require('lspconfig').rust_analyzer.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = {
-        ['rust-analyzer'] = {
-          cargo = {
-            buildScripts = {
-              enable = true,
-            },
-          },
-          check = {
-            command = "clippy",
-          },
-          procMacro = {
-            enable = true,
-          },
-        },
-      },
-    })
-    require('lspconfig').jedi_language_server.setup({})
-    require('lspconfig').wgsl_analyzer.setup({})
-    vim.cmd('LspStart')
-  end,
-  {}
-);
 -- WGSL FILE DETECTION
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
   pattern = "*.wgsl",
@@ -356,4 +282,55 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
   group = highlight_group,
   pattern = '*',
+})
+
+-- LSP SETUP
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+require('lspconfig').lua_ls.setup({
+  capabilities = capabilities,
+})
+require('lspconfig').clangd.setup({
+  capabilities = capabilities,
+})
+require('lspconfig').glsl_analyzer.setup({
+  capabilities = capabilities,
+})
+require('lspconfig').rust_analyzer.setup({
+  capabilities = capabilities,
+  settings = {
+    ['rust-analyzer'] = {
+      cargo = {
+        buildScripts = {
+          enable = true,
+        },
+      },
+      check = {
+        command = "clippy",
+      },
+      procMacro = {
+        enable = true,
+      },
+    },
+  },
+})
+require('lspconfig').jedi_language_server.setup({})
+require('lspconfig').wgsl_analyzer.setup({})
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client == nil then
+      vim.print('Could not get lsp client')
+      return
+    end
+    if client:supports_method('textDocument/completion') then
+      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+    end
+  end,
+})
+
+vim.diagnostic.config({
+  virtual_lines = {
+    current_line = true,
+  },
 })
