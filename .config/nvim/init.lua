@@ -246,7 +246,6 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
-vim.keymap.set('n', '<leader>fb', 'gg=G``', { desc = '[f]ormat [b]uffer' })
 vim.keymap.set('n', '<leader>sb', function()
  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes'))
 end, { desc = '[s]earch current [b]uffer' })
@@ -318,6 +317,8 @@ require('lspconfig').wgsl_analyzer.setup({})
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
+    vim.keymap.set('n', '<leader>fb', vim.lsp.buf.format, { desc = '[f]ormat [b]uffer' })
+
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
     if client == nil then
       vim.print('Could not get lsp client')
@@ -330,7 +331,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 vim.diagnostic.config({
-  virtual_lines = {
+  virtual_text = {
     current_line = true,
   },
 })
