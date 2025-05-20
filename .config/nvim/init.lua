@@ -58,6 +58,7 @@ require('lazy').setup({
         Comment = { italic = true },
         PMenuSel = { bg = "#004040" },
         Visual = { bg = "#4F4F4F" },
+        LspReferenceText = { bg = "#303030" },
       },
     },
     version = '2.*'
@@ -247,7 +248,7 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 vim.keymap.set('n', '<leader>sb', function()
- require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes'))
+  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes'))
 end, { desc = '[s]earch current [b]uffer' })
 vim.keymap.set('n', '<leader>sG', require('telescope.builtin').git_files, { desc = '[s]earch [G]it files' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[s]earch [f]iles' })
@@ -326,6 +327,26 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
     if client:supports_method('textDocument/completion') then
       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+    end
+    if client:supports_method('textDocument/documentHighlight') then
+      vim.api.nvim_create_autocmd('CursorHold', {
+        buffer = ev.buf,
+        callback = function()
+          vim.lsp.buf.document_highlight()
+        end
+      })
+      vim.api.nvim_create_autocmd('CursorHoldI', {
+        buffer = ev.buf,
+        callback = function()
+          vim.lsp.buf.document_highlight()
+        end
+      })
+      vim.api.nvim_create_autocmd('CursorMoved', {
+        buffer = ev.buf,
+        callback = function()
+          vim.lsp.buf.clear_references()
+        end
+      })
     end
   end,
 })
