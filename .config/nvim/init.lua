@@ -285,6 +285,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- LSP SETUP
+vim.lsp.set_log_level("off")
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 require('lspconfig').lua_ls.setup({
   capabilities = capabilities,
