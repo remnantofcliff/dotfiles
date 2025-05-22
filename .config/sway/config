@@ -5,7 +5,7 @@ set $left h
 set $down j
 set $up k
 set $right l
-set $term alacritty
+set $term 'alacritty msg create-window || alacritty'
 set $menu wofi --show drun | xargs swaymsg exec --
 
 include /etc/sway/config-vars.d/*
@@ -164,4 +164,6 @@ for_window [app_id="it.mijorus.smile"] floating enable
 for_window [app_id="org.pulseaudio.pavucontrol"] floating enable
 
 focus_follows_mouse no
+
+exec "./Scripts/wallpaper.sh"
 
