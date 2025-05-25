@@ -2,7 +2,7 @@ string=""
 
 if [ -x "$(command -v wpctl)" ]; then
     volume="$(wpctl get-volume @DEFAULT_AUDIO_SINK@)"
-    string+=" :: ${volume}"
+    string="${string} :: ${volume}"
 fi
 
 if [ -x "$(command -v wpctl)" ]; then
@@ -11,7 +11,7 @@ if [ -x "$(command -v wpctl)" ]; then
         *'MUTED'*) microphone='󰍭' ;;
                 *) microphone='' ;;
     esac
-    string+=" :: ${microphone}"
+    string="${string} :: ${microphone}"
 fi
 
 BATTERYSTATUS=/sys/class/power_supply/BAT0/status
@@ -22,18 +22,18 @@ if [ -f "${BATTERYSTATUS}" ]; then
     else
         batterystatus='󰂄'
     fi
-    string+=" :: ${batterystatus}"
+    string="${string} :: ${batterystatus}"
 fi
 
 BATTERYCAPACITY=/sys/class/power_supply/BAT0/status
 if [ -f "${BATTERYCAPACITY}" ]; then
     batterycapacity="$(cat ${BATTERYCAPACITY})%"
-    string+=" :: ${batterycapacity}"
+    string="${string} :: ${batterycapacity}"
 fi
 
 if [ -x "$(command -v date)" ]; then
     date=$(date '+%Y-%m-%d %H:%M')
-    string+=" :: ${date}"
+    string="${string} :: ${date}"
 fi
 
 echo ${string}
