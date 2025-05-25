@@ -132,6 +132,7 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
+
 bar {
     position bottom
 
@@ -150,8 +151,12 @@ bar {
 }
 
 
+workspace_layout tabbed
 default_border pixel 1
+titlebar_padding 1
+titlebar_border_thickness 0
 smart_borders on
+hide_edge_borders --i3 smart
 
 for_window [app_id="nemo"] floating enable
 for_window [app_id="org.gnome.Nautilus"] floating enable
@@ -164,6 +169,13 @@ for_window [app_id="it.mijorus.smile"] floating enable
 for_window [app_id="org.pulseaudio.pavucontrol"] floating enable
 
 focus_follows_mouse no
+
+# Colors
+
+# Property Name             Border  BG      Text    Indicator Child-border
+client.focused              #000000 #001040 #00CFFF #000000   #005F7F
+client.focused_inactive     #000000 #001040 #00CFFF #000000   #005F7F
+client.unfocused            #000000 #001010 #d8dee8 #2f343f   #2f343f
 
 exec "./Scripts/wallpaper.sh"
 
