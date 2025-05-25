@@ -25,7 +25,7 @@ if [ -f "${BATTERYSTATUS}" ]; then
     string="${string} :: ${batterystatus}"
 fi
 
-BATTERYCAPACITY=/sys/class/power_supply/BAT0/status
+BATTERYCAPACITY=/sys/class/power_supply/BAT0/capacity
 if [ -f "${BATTERYCAPACITY}" ]; then
     batterycapacity="$(cat ${BATTERYCAPACITY})%"
     string="${string} :: ${batterycapacity}"
